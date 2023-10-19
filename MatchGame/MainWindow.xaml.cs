@@ -32,14 +32,15 @@ namespace MatchGame
         int matchesFound;
         int winPoint = 8;
 
+        bool gameStarted = false;
+
         static float lowestTime=1000;
 
         public MainWindow()
         {
             InitializeComponent();
-            timer.Interval = TimeSpan.FromSeconds(.1);
-            timer.Tick += Timer_Tick;
-            SetUpGame();
+           
+            
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -52,6 +53,10 @@ namespace MatchGame
                 timer.Stop();
                 timerTextBlock.Text = timerTextBlock.Text + " : PlayAgain ▶️";
                 UpdateScore(tenthsOfSecondsElapsed/10F);
+            }
+            else if(!gameStarted)
+            {
+                timerTextBlock.Text = " : PlayAgain ▶️";
             }
         }
         public void UpdateScore(float score)
@@ -69,16 +74,18 @@ namespace MatchGame
 
         public void SetUpGame()
         {
+            timer.Interval = TimeSpan.FromSeconds(.1);
+            timer.Tick += Timer_Tick;
             List<string> animalEmojis = new List<string>()
             {
-                "🐒","🐒",
-                "🐈","🐈",
-                "🦝","🦝",
-                "🐘","🐘",
-                "🦉","🦉",
-                "🐣","🐣",
-                "🦜","🦜",
-                "🐝","🐝",
+                "🌏","🌏",
+                "🛸","🛸",
+                "😻","😻",
+                "😉","😉",
+                "🏕️","🏕️",
+                "🐳","🐳",
+                "🐶","🐶",
+                "🤖","🤖",
             };
 
             foreach (TextBlock textBlock in mainGrid.Children.OfType<TextBlock>())
@@ -102,6 +109,12 @@ namespace MatchGame
             {
                 SetUpGame();
             }
+            else if(!gameStarted)
+            {
+                SetUpGame();
+                gameStarted = true;
+            }
+            
         }
 
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
