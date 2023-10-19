@@ -30,26 +30,40 @@ namespace MatchGame
         DispatcherTimer timer = new DispatcherTimer();
         int tenthsOfSecondsElapsed;
         int matchesFound;
+        int winPoint = 8;
 
-        int winPoint = 2;
+        static float lowestTime=1000;
 
         public MainWindow()
         {
             InitializeComponent();
             timer.Interval = TimeSpan.FromSeconds(.1);
             timer.Tick += Timer_Tick;
-            timerTextBlock.Text = "rakesh";
             SetUpGame();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
             tenthsOfSecondsElapsed++;
-            timerTextBlock.Text = tenthsOfSecondsElapsed.ToString("0.0s");
+            timerTextBlock.Text = (tenthsOfSecondsElapsed/10F).ToString("0.0s");
+           
             if(matchesFound == winPoint)
             {
                 timer.Stop();
                 timerTextBlock.Text = timerTextBlock.Text + " : PlayAgain ▶️";
+                UpdateScore(tenthsOfSecondsElapsed/10F);
+            }
+        }
+        public void UpdateScore(float score)
+        {
+           
+            if(lowestTime>score)
+            {
+                lowestTime = score;
+                LowestTime.Text = "Lowest : " + lowestTime.ToString("0.0s");
+            }
+            else
+            {
             }
         }
 
@@ -69,7 +83,7 @@ namespace MatchGame
 
             foreach (TextBlock textBlock in mainGrid.Children.OfType<TextBlock>())
             {
-                if (textBlock.Name != "timerTextBlock")
+                if (textBlock.Name != "timerTextBlock" && textBlock.Name != "LowestTime")
                 {
                     textBlock.Visibility = Visibility.Visible;
                     Random random = new Random();
@@ -98,12 +112,14 @@ namespace MatchGame
                 firstTextBlock = textBlock;
                 firstTextBlock.Visibility = Visibility.Hidden;
                 getFirstTextBlock = true;
-            }else if(textBlock.Text==firstTextBlock.Text)
+            }
+            else if(textBlock.Text==firstTextBlock.Text)
             {
                 textBlock.Visibility = Visibility.Hidden;
                 matchesFound++;
                 getFirstTextBlock = false;
-            }else
+            }
+            else
             {
                 firstTextBlock.Visibility = Visibility.Visible;
                 getFirstTextBlock = false;
